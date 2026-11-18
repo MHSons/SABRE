@@ -154,12 +154,14 @@
         }
         .word-table th {
             text-align: left;
+            vertical-align: bottom; /* Is se saare headers neeche se ek level par rahenge */
             font-weight: normal;
-            padding: 0 3px 2px 0;
+            padding: 0 3px 1px 0;
         }
         .dashes td {
-            padding: 0 3px 4px 0;
-            letter-spacing: -0.5px;
+            vertical-align: top;
+            padding: 0 3px 5px 0;
+            letter-spacing: -0.3px;
             white-space: nowrap;
             overflow: hidden;
         }
@@ -263,14 +265,12 @@
                 <defs>
                     <mask id="sabre-slash-mask">
                         <rect width="230" height="60" fill="white" />
-                        <!-- Curved white slash cutting across Sabre letters -->
                         <path d="M -5 50 Q 105 26 225 14 L 225 19 Q 105 32 -5 55 Z" fill="black" />
                     </mask>
                 </defs>
                 <g mask="url(#sabre-slash-mask)">
                     <text x="2" y="47" font-family="'Arial Black', 'Helvetica Neue', Impact, sans-serif" font-style="italic" font-weight="900" font-size="54" fill="#e1000f" letter-spacing="-2.5">Sabre</text>
                 </g>
-                <!-- Bottom-right Registered Trademark ® -->
                 <text x="206" y="48" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#e1000f">®</text>
             </svg>
         </div>
@@ -310,13 +310,13 @@
                     <th style="width: 20%;">STOP/EQP/<br>FLYING TIME<br>SERVICES</th>
                 </tr>
                 <tr class="dashes">
-                    <td>------</td>
-                    <td>------</td>
+                    <td>-------</td>
+                    <td>-------</td>
                     <td>----</td>
-                    <td>-----------------------</td>
+                    <td>------------------------</td>
                     <td>--------</td>
-                    <td>--------------<br>-</td>
-                    <td>----------------<br>-</td>
+                    <td>---------------</td>
+                    <td>------------------</td>
                 </tr>
             </thead>
             <tbody id="outFlightsBody">
