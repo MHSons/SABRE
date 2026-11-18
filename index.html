@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Itinerary & Dummy Ticket Generator</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #ccc;
+        }
+        .form-section {
+            background: #eef2f7;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .form-section h3 {
+            margin-top: 0;
+            color: #1a365d;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .form-group input, .form-group select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        .btn-container {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 15px;
+        }
+        button {
+            background-color: #1a365d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        /* Ticket Design Layout */
+        .ticket-box {
+            border: 2px solid #000;
+            padding: 20px;
+            background: #fff;
+        }
+        .header-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .contact-info {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 10px;
+        }
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .passenger-info {
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        .footer-note {
+            margin-top: 25px;
+            font-size: 10px;
+            line-height: 1.4;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .print-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            background-color: #2f855a;
+        }
+
+        @media print {
+            .form-section, .print-btn {
+                display: none;
+            }
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Input Form for Generating Ticket -->
+    <div class="form-section">
+        <h3>✈️ Enter Ticket & Itinerary Details</h3>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Agency Name:</label>
+                <input type="text" id="agencyName" value="ARAB INTERNATIONAL TRAVEL SERVICES">
+            </div>
+            <div class="form-group">
+                <label>Contact Number:</label>
+                <input type="text" id="agencyContact" value="0300-0442454">
+            </div>
+            <div class="form-group">
+                <label>Email Address:</label>
+                <input type="text" id="agencyEmail" value="MUNAWARLHR@GMAIL.COM">
+            </div>
+            <div class="form-group">
+                <label>Consultant Name:</label>
+                <input type="text" id="consultantName" value="MUNAWAR ASRAR">
+            </div>
+            <div class="form-group">
+                <label>Passenger Name (e.g., SHAHBAZ/ANAS MR):</label>
+                <input type="text" id="passengerName" value="SHAHBAZ/ANAS MR">
+            </div>
+            <div class="form-group">
+                <label>Booking Reference (PNR):</label>
+                <input type="text" id="bookingRef" value="XYZ123">
+            </div>
+            <div class="form-group">
+                <label>Flight Day & Date (e.g., SUN / 17 JAN):</label>
+                <input type="text" id="flightDate" value="SUN / 17 JAN">
+            </div>
+            <div class="form-group">
+                <label>Departure City / Terminal:</label>
+                <input type="text" id="depCity" value="LAHORE">
+            </div>
+            <div class="form-group">
+                <label>Departure Time:</label>
+                <input type="text" id="depTime" value="1250">
+            </div>
+            <div class="form-group">
+                <label>Arrival City / Terminal:</label>
+                <input type="text" id="arrCity" value="ISTANBUL AIRPORT">
+            </div>
+            <div class="form-group">
+                <label>Arrival Time:</label>
+                <input type="text" id="arrTime" value="1820">
+            </div>
+            <div class="form-group">
+                <label>Flight Number (e.g., TK 715):</label>
+                <input type="text" id="flightNo" value="TK 715">
+            </div>
+            <div class="form-group">
+                <label>Class & Aircraft:</label>
+                <input type="text" id="flightClass" value="ECONOMY / AIRBUS 330-300">
+            </div>
+            <div class="form-group">
+                <label>Flying Time / Stops:</label>
+                <input type="text" id="flightDuration" value="06HR 30MIN / NON-STOP">
+            </div>
+            <div class="btn-container">
+                <button onclick="generateTicket()">Generate Itinerary</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Ticket Preview Area -->
+    <div class="ticket-box" id="ticketPreview">
+        <div class="header-title" id="outAgency">ARAB INTERNATIONAL TRAVEL SERVICES</div>
+        <div class="contact-info">
+            OFFICE HOURS | CONTACT: <span id="outContact">0300-0442454</span> | EMAIL ADDRESS: <span id="outEmail">MUNAWARLHR@GMAIL.COM</span>
+        </div>
+        <div class="meta-info">
+            <div>DATE: <span id="outCurDate"></span> &nbsp;&nbsp; TIME: <span id="outCurTime"></span></div>
+            <div><strong>ITINERARY</strong></div>
+        </div>
+        <div class="meta-info">
+            <div>CONSULTANT NAME: <span id="outConsultant">MUNAWAR ASRAR</span></div>
+            <div>BOOKING REF: <span id="outBookingRef">XYZ123</span></div>
+        </div>
+        <div class="passenger-info">
+            ITINERARY PREPARED FOR:<br>
+            <strong><span id="outPassenger">SHAHBAZ/ANAS MR</span></strong>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>DAY</th>
+                    <th>DATE</th>
+                    <th>CITY/TERMINAL/STOPS</th>
+                    <th>TIME</th>
+                    <th>FLIGHT / CLASS</th>
+                    <th>DETAILS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="tDay">SUN</td>
+                    <td id="tDate">17 JAN</td>
+                    <td>
+                        <strong>DEP:</strong> <span id="tDepCity">LAHORE</span><br>
+                        <strong>ARR:</strong> <span id="tArrCity">ISTANBUL AIRPORT</span>
+                    </td>
+                    <td>
+                        <strong>DEP:</strong> <span id="tDepTime">1250</span><br>
+                        <strong>ARR:</strong> <span id="tArrTime">1820</span>
+                    </td>
+                    <td>
+                        <span id="tFlightNo">TK 715</span><br>
+                        <span id="tClass">ECONOMY</span>
+                    </td>
+                    <td>
+                        <span id="tDuration">NON-STOP (06HR 30MIN)</span><br>
+                        STATUS: SS<br>
+                        MEALS: YES
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer-note">
+            DATA PROTECTION NOTICE: YOUR PERSONAL DATA WILL BE PROCESSED IN ACCORDANCE WITH THE APPLICABLE CARRIERS’ PRIVACY POLICY AND, IF YOUR BOOKING IS MADE VIA A RESERVATION SYSTEM PROVIDER (GDS), WITH ITS PRIVACY POLICY. THESE ARE AVAILABLE AT HTTP://WWW.IATATRAVELCENTER.COM/PRIVACY OR FROM THE CARRIER OR GDS DIRECTLY. YOU SHOULD READ THIS DOCUMENTATION, WHICH APPLIES TO YOUR BOOKING AND SPECIFIES, FOR EXAMPLE, HOW YOUR PERSONAL DATA IS COLLECTED, STORED, USED, DISCLOSED AND TRANSFERRED.
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<script>
+    // Set current system date and time automatically on load
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    document.getElementById('outCurDate').innerText = `${day}/${month}/${year}`;
+    document.getElementById('outCurTime').innerText = now.toTimeString().split(' ')[0];
+
+    function generateTicket() {
+        document.getElementById('outAgency').innerText = document.getElementById('agencyName').value;
+        document.getElementById('outContact').innerText = document.getElementById('agencyContact').value;
+        document.getElementById('outEmail').innerText = document.getElementById('agencyEmail').value;
+        document.getElementById('outConsultant').innerText = document.getElementById('consultantName').value;
+        document.getElementById('outPassenger').innerText = document.getElementById('passengerName').value;
+        document.getElementById('outBookingRef').innerText = document.getElementById('bookingRef').value;
+        
+        let flightDateParts = document.getElementById('flightDate').value.split('/');
+        document.getElementById('tDay').innerText = flightDateParts[0] ? flightDateParts[0].trim() : 'SUN';
+        document.getElementById('tDate').innerText = flightDateParts[1] ? flightDateParts[1].trim() : '17 JAN';
+
+        document.getElementById('tDepCity').innerText = document.getElementById('depCity').value;
+        document.getElementById('tDepTime').innerText = document.getElementById('depTime').value;
+        document.getElementById('tArrCity').innerText = document.getElementById('arrCity').value;
+        document.getElementById('tArrTime').innerText = document.getElementById('arrTime').value;
+        document.getElementById('tFlightNo').innerText = document.getElementById('flightNo').value;
+        document.getElementById('tClass').innerText = document.getElementById('flightClass').value;
+        document.getElementById('tDuration').innerText = document.getElementById('flightDuration').value;
+        
+        window.scrollTo({ top: document.getElementById('ticketPreview').offsetTop - 20, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
