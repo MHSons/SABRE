@@ -97,7 +97,6 @@
             text-transform: none !important;
         }
 
-        /* Exact Right-Side Alignment for Date/Time Block */
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -239,14 +238,14 @@
 
     <!-- EXACT TICKET SHEET -->
     <div class="word-page">
-        <!-- EXACT MATCH SABRE LOGO WITH PROPER DIAGONAL CUT ACROSS ALL LETTERS -->
+        <!-- EXACT MATCH SABRE LOGO: CUT STARTS AT CENTER OF BOTTOM CURVE OF 'S' AND LIGHTLY TOUCHES 'r' -->
         <div class="sabre-logo-wrap">
             <svg width="115" height="30" viewBox="0 0 215 62" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <mask id="sabre-slash-mask">
                         <rect width="215" height="62" fill="white" />
-                        <!-- Exact diagonal curved slash cut passing through the word as shown in screenshot -->
-                        <path d="M 2 56 Q 70 34 200 16 L 200 21 Q 70 39 2 61 Z" fill="black" />
+                        <!-- Starts at center of S's bottom curve (x=14, y=41) and tapers to lightly touch 'r' (x=135, y=22) -->
+                        <path d="M 14 41 Q 72 28 135 22 L 135 24 Q 72 32 14 45 Z" fill="black" />
                     </mask>
                 </defs>
                 <g mask="url(#sabre-slash-mask)">
