@@ -113,16 +113,17 @@
             min-width: 215px;
         }
 
+        /* Zero margin to eliminate extra gap above name */
         .passenger-box {
             margin-bottom: 16px;
         }
         
-        /* Ultra-thin 0.3px underline with zero extra spacing */
         .underline-title {
             text-decoration: underline;
             text-decoration-thickness: 0.3px;
             text-underline-offset: 1px;
-            display: inline;
+            display: block;
+            margin-bottom: 0px;
         }
 
         .word-table {
@@ -277,8 +278,8 @@
         </div>
 
         <div class="passenger-box">
-            <span class="underline-title">ITINERARY PREPARED FOR:</span>
-            <div id="outPassenger" style="margin-top: 2px;">SHAHBAZ/ANAS MR</div>
+            <div class="underline-title">ITINERARY PREPARED FOR:</div>
+            <div id="outPassenger">SHAHBAZ/ANAS MR</div>
         </div>
 
         <table class="word-table">
