@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabre GDS Itinerary Generator</title>
+    <title>Sabre GDS Itinerary - Exact Word Format</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,43 +16,43 @@
         }
 
         /* =========================================
-           CONTROL FORM (HIDDEN WHEN PRINTING)
+           CONTROL PANEL (HIDDEN WHEN PRINTING)
            ========================================= */
         .control-panel {
-            max-width: 920px;
-            margin: 0 auto 25px auto;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
             background: #ffffff;
-            padding: 20px 25px;
+            padding: 18px 22px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-top: 4px solid #e11d48;
+            border-top: 4px solid #dc2626;
         }
         .control-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #cbd5e1;
         }
         .control-header h3 {
             margin: 0;
             color: #0f172a;
-            font-size: 16px;
+            font-size: 15px;
         }
         .live-status {
             font-family: monospace;
             background: #dcfce7;
             color: #166534;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
         }
         .form-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         .form-group {
             display: flex;
@@ -62,131 +62,138 @@
             font-size: 11px;
             font-weight: bold;
             color: #334155;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .form-group input {
-            padding: 7px 9px;
+            padding: 6px 8px;
             border: 1px solid #94a3b8;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
         }
         .segment-box {
             background: #f8fafc;
             border: 1px solid #cbd5e1;
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .segment-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            color: #be123c;
-            margin-bottom: 8px;
+            color: #dc2626;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
         }
         .btn-row {
-            margin-top: 15px;
+            margin-top: 12px;
             display: flex;
             gap: 10px;
         }
         .btn {
-            padding: 9px 16px;
+            padding: 8px 14px;
             border: none;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
         }
         .btn-add { background: #e2e8f0; color: #0f172a; }
-        .btn-print { background: #be123c; color: #ffffff; margin-left: auto; }
-        .btn-del { background: #dc2626; color: #fff; padding: 2px 8px; font-size: 11px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-print { background: #dc2626; color: #ffffff; margin-left: auto; }
+        .btn-del { background: #dc2626; color: #fff; padding: 2px 6px; font-size: 10px; border: none; border-radius: 3px; cursor: pointer; }
 
         /* =========================================
-           EXACT SABRE SCREENSHOT LAYOUT
+           EXACT WORD DOCUMENT STYLE (Courier New 7.5pt)
            ========================================= */
-        .sabre-sheet {
-            width: 920px;
-            min-height: 540px;
+        .word-page {
+            width: 850px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 35px 40px;
+            padding: 40px 45px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            font-family: "Courier New", Courier, monospace;
-            font-size: 12.5px;
-            line-height: 1.35;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 7.5pt; /* Exact Word View Size Match */
+            line-height: 1.25;
             color: #000000;
             text-transform: uppercase;
         }
 
-        /* Top Sabre Logo */
-        .sabre-logo-box {
-            margin-bottom: 18px;
+        /* Exact Sabre Logo Styling from Word */
+        .sabre-logo {
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 18pt;
+            color: #dc2626;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            display: inline-block;
+        }
+        .sabre-logo sup {
+            font-size: 8pt;
+            font-style: normal;
+            font-family: Arial, sans-serif;
+            vertical-align: super;
+            margin-left: 1px;
         }
 
-        /* Two-Column Top Header */
-        .header-split {
+        /* Two-Column Header Layout */
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         .header-left {
-            width: 58%;
+            width: 55%;
         }
         .header-right {
-            width: 32%;
+            width: 40%;
+            text-align: left;
         }
 
-        /* Passenger Block */
-        .passenger-block {
-            margin-bottom: 24px;
+        /* Itinerary Prepared For */
+        .passenger-box {
+            margin-bottom: 16px;
         }
-        .underlined-title {
+        .underline-title {
             text-decoration: underline;
         }
 
-        /* Exact Sabre Flight Table */
-        .sabre-table {
+        /* Exact GDS Table Layout */
+        .word-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            margin-bottom: 14px;
             table-layout: fixed;
         }
-        .sabre-table th {
+        .word-table th {
             text-align: left;
-            vertical-align: bottom;
             font-weight: normal;
-            padding: 0 4px 2px 0;
-            line-height: 1.25;
+            padding: 0 3px 2px 0;
         }
-        .dash-row td {
-            padding: 0 4px 4px 0;
-            letter-spacing: 0px;
+        .dashes td {
+            padding: 0 3px 4px 0;
+            letter-spacing: -0.5px;
             white-space: nowrap;
             overflow: hidden;
         }
-        .flight-row td {
+        .flight-data td {
             text-align: left;
             vertical-align: top;
-            padding: 2px 4px 6px 0;
+            padding: 2px 3px 6px 0;
+        }
+
+        .airline-line {
+            margin-bottom: 24px;
+            padding-left: 0;
+        }
+
+        .footer-text {
+            text-align: justify;
             line-height: 1.3;
         }
-
-        /* Airline Reservation Line */
-        .airline-res-line {
-            margin-top: 4px;
-            margin-bottom: 32px;
-            padding-left: 24.5%;
-        }
-
-        /* Data Protection Footer */
-        .footer-notice {
-            font-size: 11px;
-            line-height: 1.35;
-            text-align: left;
-        }
-        .footer-notice a {
+        .footer-text a {
             color: #0000ee;
             text-decoration: underline;
         }
@@ -200,21 +207,21 @@
             .control-panel {
                 display: none !important;
             }
-            .sabre-sheet {
+            .word-page {
                 box-shadow: none;
                 margin: 0;
                 width: 100%;
-                padding: 15px 20px;
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- AUTO CONTROL PANEL -->
+    <!-- CONTROL PANEL -->
     <div class="control-panel">
         <div class="control-header">
-            <h3>✈️ Sabre GDS Itinerary Generator (Exact Screenshot Match)</h3>
+            <h3>✈️ Sabre Itinerary Generator (Word Format Match)</h3>
             <span class="live-status" id="liveBadge">AUTO CLOCK ACTIVE</span>
         </div>
 
@@ -236,10 +243,10 @@
                 <input type="text" id="inConsultant" value="MUNAWAR ASRAR" oninput="renderTicket()">
             </div>
             <div class="form-group">
-                <label>Booking Ref (Optional / Auto PNR)</label>
+                <label>Booking Ref (Optional / Auto)</label>
                 <div style="display:flex; gap:4px;">
-                    <input type="text" id="inRef" value="" placeholder="Blank ya Auto PNR" style="width:100%;" oninput="renderTicket()">
-                    <button type="button" class="btn btn-add" style="padding:4px 8px;" onclick="autoPNR()">Auto</button>
+                    <input type="text" id="inRef" value="" placeholder="Blank or Auto" style="width:100%;" oninput="renderTicket()">
+                    <button type="button" class="btn btn-add" style="padding:4px 6px;" onclick="autoPNR()">Auto</button>
                 </div>
             </div>
             <div class="form-group">
@@ -250,7 +257,7 @@
 
         <div id="segmentsWrapper"></div>
 
-        <div class="form-grid" style="margin-top: 12px;">
+        <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group" style="grid-column: span 3;">
                 <label>Airline Reservation Line</label>
                 <input type="text" id="inAirlineLine" value="TK TURKISH AIRLINES RESERVATION NUMBER (LAHORE): LHE-TK" oninput="renderTicket()">
@@ -263,18 +270,13 @@
         </div>
     </div>
 
-    <!-- EXACT SABRE TICKET SHEET -->
-    <div class="sabre-sheet">
-        <!-- Sabre Red Logo SVG -->
-        <div class="sabre-logo-box">
-            <svg width="115" height="32" viewBox="0 0 180 50" xmlns="http://www.w3.org/2000/svg">
-                <text x="0" y="38" font-family="Arial Black, Impact, sans-serif" font-style="italic" font-weight="900" font-size="42" fill="#e56b6f" letter-spacing="-1.5">Sabre</text>
-                <text x="133" y="36" font-family="Arial, sans-serif" font-size="9" fill="#e56b6f">®</text>
-            </svg>
-        </div>
+    <!-- WORD DOCUMENT PREVIEW SHEET -->
+    <div class="word-page">
+        <!-- Exact Sabre Logo with ® -->
+        <div class="sabre-logo">Sabre<sup>®</sup></div>
 
-        <!-- Two-Column Header -->
-        <div class="header-split">
+        <!-- Two Column Header -->
+        <div class="header-container">
             <div class="header-left">
                 <div id="outAgency">ARAB INTERNATIONAL TRAVEL SERVICES</div>
                 <div>OFFICE HOURS CONTACT: <span id="outContact">0300-0442454</span></div>
@@ -282,32 +284,32 @@
             </div>
             <div class="header-right">
                 <div>DATE:<span id="outDate">18/11/2026</span></div>
-                <div>TIME: <span id="outTime">12:38:16</span></div>
+                <div>TIME: <span id="outTime">12:35:16</span></div>
                 <div>MMM &nbsp;&nbsp; ITINERARY</div>
                 <div>CONSULTANT NAME: <span id="outConsultant">MUNAWAR ASRAR</span></div>
                 <div>BOOKING REF: <span id="outRef"></span></div>
             </div>
         </div>
 
-        <!-- Passenger Info -->
-        <div class="passenger-block">
-            <div class="underlined-title">ITINERARY PREPARED FOR:</div>
+        <!-- Passenger Section -->
+        <div class="passenger-box">
+            <div class="underline-title">ITINERARY PREPARED FOR:</div>
             <div id="outPassenger">SHAHBAZ/ANAS MR</div>
         </div>
 
-        <!-- Sabre Columns Table -->
-        <table class="sabre-table">
+        <!-- Table Columns -->
+        <table class="word-table">
             <thead>
                 <tr>
-                    <th style="width: 9.5%;">DAY</th>
-                    <th style="width: 10%;">DATE</th>
-                    <th style="width: 5%;"></th>
-                    <th style="width: 31%;">CITY/TERMINAL/<br>STOPOVER CITY</th>
-                    <th style="width: 8.5%;">TIME</th>
+                    <th style="width: 10%;">DAY</th>
+                    <th style="width: 11%;">DATE</th>
+                    <th style="width: 4%;"></th>
+                    <th style="width: 32%;">CITY/TERMINAL/<br>STOPOVER CITY</th>
+                    <th style="width: 8%;">TIME</th>
                     <th style="width: 15%;">FLIGHT<br>CLASS<br>STATUS</th>
-                    <th style="width: 21%;">STOP/EQP/<br>FLYING TIME<br>SERVICES</th>
+                    <th style="width: 20%;">STOP/EQP/<br>FLYING TIME<br>SERVICES</th>
                 </tr>
-                <tr class="dash-row">
+                <tr class="dashes">
                     <td>------</td>
                     <td>------</td>
                     <td>----</td>
@@ -321,13 +323,13 @@
             </tbody>
         </table>
 
-        <!-- Airline Reservation Number -->
-        <div class="airline-res-line" id="outAirlineLine">
+        <!-- Airline Line -->
+        <div class="airline-line" id="outAirlineLine">
             TK TURKISH AIRLINES RESERVATION NUMBER (LAHORE): LHE-TK
         </div>
 
-        <!-- Data Protection Notice -->
-        <div class="footer-notice">
+        <!-- Footer -->
+        <div class="footer-text">
             DATA PROTECTION NOTICE: YOUR PERSONAL DATA WILL BE PROCESSED IN ACCORDANCE WITH THE APPLICABLE CARRIERS’ PRIVACY POLICY AND, IF YOUR BOOKING IS MADE VIA A RESERVATION SYSTEM PROVIDER (GDS), WITH ITS PRIVACY POLICY. THESE ARE AVAILABLE AT <a href="http://www.iatatravelcenter.com/privacy" target="_blank">HTTP://WWW.IATATRAVELCENTER.COM/PRIVACY</a> OR FROM THE CARRIER OR GDS DIRECTLY. YOU SHOULD READ THIS DOCUMENTATION, WHICH APPLIES TO YOUR BOOKING AND SPECIFIES, FOR EXAMPLE, HOW YOUR PERSONAL DATA IS COLLECTED, STORED, USED, DISCLOSED AND TRANSFERRED.
         </div>
     </div>
@@ -336,7 +338,6 @@
     const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-    // 1. Auto Live Clock & Date
     function startLiveClock() {
         const update = () => {
             const now = new Date();
@@ -355,7 +356,6 @@
         setInterval(update, 1000);
     }
 
-    // 2. Auto PNR Generator
     function autoPNR() {
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         let res = "";
@@ -364,7 +364,6 @@
         renderTicket();
     }
 
-    // 3. Dynamic Flight Segments
     let segId = 0;
     function addFlight() {
         segId++;
@@ -375,12 +374,12 @@
         div.id = `seg-${id}`;
         div.innerHTML = `
             <div class="segment-title">
-                <span>FLIGHT SEGMENT #${id} (Calendar & Time Auto Format)</span>
+                <span>FLIGHT SEGMENT #${id} (Auto Calendar & Time)</span>
                 ${id > 1 ? `<button type="button" class="btn-del" onclick="removeFlight(${id})">Remove</button>` : ''}
             </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Select Flight Date (Calendar)</label>
+                    <label>Flight Date (Calendar)</label>
                     <input type="date" class="f-date" value="2027-01-17" onchange="renderTicket()">
                 </div>
                 <div class="form-group">
@@ -475,7 +474,7 @@
             const srv = box.querySelector('.f-srv').value;
 
             const tr = document.createElement('tr');
-            tr.className = 'flight-row';
+            tr.className = 'flight-data';
             tr.innerHTML = `
                 <td>${cal.day}</td>
                 <td>${cal.date}</td>
