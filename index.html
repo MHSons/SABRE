@@ -113,23 +113,24 @@
             min-width: 215px;
         }
 
+        /* ZERO SPACE + HAIRLINE UNDERLINE */
         .passenger-box {
             margin-bottom: 14px;
+            line-height: 1;
         }
         
         .underline-title {
-            text-decoration: underline;
-            text-decoration-thickness: 0.3px;
-            text-underline-offset: 1px;
-            display: block;
-            margin: 0;
+            display: inline-block;
+            border-bottom: 0.15px solid #333333;
+            line-height: 0.95;
             padding: 0;
+            margin: 0;
         }
         
         #outPassenger {
             margin: 0;
             padding: 0;
-            line-height: 1.15;
+            line-height: 1.05;
         }
 
         .word-table {
@@ -162,7 +163,6 @@
             padding-left: 25%;
         }
 
-        /* Lighter / Dim color for bottom paragraph */
         .footer-text {
             font-size: 6.3pt;
             color: #666666;
@@ -171,9 +171,9 @@
         }
         .footer-text a {
             color: #2b50c7;
-            text-decoration: underline;
-            text-decoration-thickness: 0.3px;
-            text-underline-offset: 1px;
+            text-decoration: none;
+            border-bottom: 0.15px solid #2b50c7;
+            line-height: 0.95;
         }
 
         @page {
@@ -233,7 +233,7 @@
             </div>
             <div class="form-group">
                 <label>Passenger Name(s)</label>
-                <input type="text" id="inPassenger" value="SHAHBAZ/ANAS MR" oninput="renderTicket()">
+                <input type="text" id="inPassenger" value="AHMAD/ABRAR MR" oninput="renderTicket()">
             </div>
         </div>
 
@@ -285,8 +285,8 @@
         </div>
 
         <div class="passenger-box">
-            <div class="underline-title">ITINERARY PREPARED FOR:</div>
-            <div id="outPassenger">SHAHBAZ/ANAS MR</div>
+            <span class="underline-title">ITINERARY PREPARED FOR:</span>
+            <div id="outPassenger">AHMAD/ABRAR MR</div>
         </div>
 
         <table class="word-table">
