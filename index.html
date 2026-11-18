@@ -116,13 +116,12 @@
         .passenger-box {
             margin-bottom: 16px;
         }
-        /* Thin underline matching Word style */
+        
+        /* Ultra-thin 0.4px underline */
         .underline-title {
-            display: inline-block;
-            text-decoration: none;
-            border-bottom: 0.6px solid #000000;
-            padding-bottom: 0.5px;
-            line-height: 1.1;
+            text-decoration: underline;
+            text-decoration-thickness: 0.4px;
+            text-underline-offset: 2px;
         }
 
         .word-table {
@@ -155,7 +154,7 @@
             padding-left: 25%;
         }
 
-        /* Dim/soft color for bottom 4 lines + thin underline on link */
+        /* Dim color for bottom lines + 0.4px thin underline on link */
         .footer-text {
             font-size: 6.3pt;
             color: #444444;
@@ -164,9 +163,9 @@
         }
         .footer-text a {
             color: #1a45b8;
-            text-decoration: none;
-            border-bottom: 0.6px solid #1a45b8;
-            padding-bottom: 0.5px;
+            text-decoration: underline;
+            text-decoration-thickness: 0.4px;
+            text-underline-offset: 2px;
         }
 
         @page {
@@ -279,7 +278,7 @@
 
         <div class="passenger-box">
             <div class="underline-title">ITINERARY PREPARED FOR:</div>
-            <div id="outPassenger">SHAHBAZ/ANAS MR</div>
+            <div id="outPassenger" style="margin-top: 2px;">SHAHBAZ/ANAS MR</div>
         </div>
 
         <table class="word-table">
