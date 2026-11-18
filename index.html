@@ -3,36 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Itinerary & Dummy Ticket Generator</title>
+    <title>GDS Flight Itinerary & Ticket Generator</title>
     <style>
+        :root {
+            --primary: #0f294a;
+            --accent: #1d4ed8;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --border: #cbd5e1;
+        }
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
             margin: 0;
             padding: 20px;
-            color: #000;
+            color: #1e293b;
         }
-        .container {
-            max-width: 800px;
+        .main-wrapper {
+            max-width: 1100px;
             margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border: 1px solid #ccc;
-        }
-        .form-section {
-            background: #eef2f7;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 5px;
-        }
-        .form-section h3 {
-            margin-top: 0;
-            color: #1a365d;
-        }
-        .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        /* Dashboard Form Styling */
+        .control-panel {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .panel-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 20px;
+        }
+        .live-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 15px 0 10px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
         }
         .form-group {
@@ -40,271 +78,468 @@
             flex-direction: column;
         }
         .form-group label {
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 600;
             margin-bottom: 5px;
-            font-size: 13px;
+            color: #475569;
         }
         .form-group input, .form-group select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: inherit;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
         }
-        .btn-container {
-            grid-column: span 2;
-            text-align: center;
-            margin-top: 15px;
-        }
-        button {
-            background-color: #1a365d;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #2b6cb0;
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
-        /* Ticket Design Layout */
-        .ticket-box {
-            border: 2px solid #000;
-            padding: 20px;
-            background: #fff;
+        /* Flight Segment Box */
+        .flight-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
         }
-        .header-title {
+        .flight-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--primary);
+        }
+        .btn-remove {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .btn {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: #e2e8f0; color: #1e293b; }
+        .btn-success { background: #15803d; color: white; margin-left: auto; }
+
+        /* =========================================
+           OFFICIAL GDS TICKET PRINT LAYOUT
+           ========================================= */
+        .ticket-sheet {
+            background: #ffffff;
+            padding: 35px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1;
+            font-family: 'Courier New', Courier, monospace;
+            color: #000000;
+        }
+        .gds-header {
             text-align: center;
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .contact-info {
-            text-align: center;
-            font-size: 13px;
+            font-size: 15px;
+            line-height: 1.5;
             margin-bottom: 15px;
-            border-bottom: 1px dashed #000;
-            padding-bottom: 10px;
         }
-        .meta-info {
+        .gds-meta-row {
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
-        .passenger-info {
-            margin-bottom: 15px;
+        .gds-passenger-block {
+            margin: 15px 0;
             font-size: 13px;
+            line-height: 1.5;
         }
-        table {
+        .gds-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin: 15px 0;
             font-size: 12px;
         }
-        th, td {
-            border: 1px solid #000;
-            padding: 6px 8px;
+        .gds-table th {
+            border-top: 1.5px solid #000;
+            border-bottom: 1.5px solid #000;
+            padding: 8px 6px;
             text-align: left;
+            font-weight: bold;
         }
-        th {
-            background-color: #eee;
+        .gds-table td {
+            padding: 10px 6px;
+            vertical-align: top;
+            border-bottom: 1px dashed #666;
+            line-height: 1.5;
         }
-        .footer-note {
-            margin-top: 25px;
-            font-size: 10px;
+        .gds-airline-ref {
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .gds-footer {
+            margin-top: 30px;
+            font-size: 10.5px;
             line-height: 1.4;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-        }
-        .print-btn {
-            display: block;
-            width: 100%;
-            margin-top: 20px;
-            background-color: #2f855a;
+            text-align: justify;
         }
 
+        /* Print Media Query */
         @media print {
-            .form-section, .print-btn {
-                display: none;
-            }
             body {
                 background: #fff;
                 padding: 0;
+                margin: 0;
             }
-            .container {
+            .control-panel {
+                display: none !important;
+            }
+            .main-wrapper {
+                max-width: 100%;
+                display: block;
+            }
+            .ticket-sheet {
                 box-shadow: none;
                 border: none;
-                padding: 0;
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Input Form for Generating Ticket -->
-    <div class="form-section">
-        <h3>✈️ Enter Ticket & Itinerary Details</h3>
-        <div class="form-grid">
+<div class="main-wrapper">
+    <!-- CONTROL PANEL / FORM -->
+    <div class="control-panel">
+        <div class="panel-header">
+            <h2>✈️ Professional GDS Itinerary Generator</h2>
+            <div class="live-badge" id="liveClockBadge">Loading Clock...</div>
+        </div>
+
+        <div class="section-title">1. Agency & Consultant Details</div>
+        <div class="grid-3">
             <div class="form-group">
-                <label>Agency Name:</label>
-                <input type="text" id="agencyName" value="ARAB INTERNATIONAL TRAVEL SERVICES">
-            </div>
-            <div class="form-group">
-                <label>Contact Number:</label>
-                <input type="text" id="agencyContact" value="0300-0442454">
-            </div>
-            <div class="form-group">
-                <label>Email Address:</label>
-                <input type="text" id="agencyEmail" value="MUNAWARLHR@GMAIL.COM">
+                <label>Agency Name</label>
+                <input type="text" id="inAgency" value="ARAB INTERNATIONAL TRAVEL SERVICES" oninput="updateTicket()">
             </div>
             <div class="form-group">
-                <label>Consultant Name:</label>
-                <input type="text" id="consultantName" value="MUNAWAR ASRAR">
+                <label>Office Contact</label>
+                <input type="text" id="inContact" value="0300-0442454" oninput="updateTicket()">
             </div>
             <div class="form-group">
-                <label>Passenger Name (e.g., SHAHBAZ/ANAS MR):</label>
-                <input type="text" id="passengerName" value="SHAHBAZ/ANAS MR">
+                <label>Email Address</label>
+                <input type="email" id="inEmail" value="MUNAWARLHR@GMAIL.COM" oninput="updateTicket()">
             </div>
             <div class="form-group">
-                <label>Booking Reference (PNR):</label>
-                <input type="text" id="bookingRef" value="XYZ123">
+                <label>Consultant Name</label>
+                <input type="text" id="inConsultant" value="MUNAWAR ASRAR" oninput="updateTicket()">
             </div>
             <div class="form-group">
-                <label>Flight Day & Date (e.g., SUN / 17 JAN):</label>
-                <input type="text" id="flightDate" value="SUN / 17 JAN">
+                <label>Passenger Name(s)</label>
+                <input type="text" id="inPassenger" value="SHAHBAZ/ANAS MR" oninput="updateTicket()">
             </div>
             <div class="form-group">
-                <label>Departure City / Terminal:</label>
-                <input type="text" id="depCity" value="LAHORE">
+                <label>Booking Ref (PNR)</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="inPnr" value="8K9L2M" style="width: 100%; text-transform: uppercase;" oninput="updateTicket()">
+                    <button type="button" class="btn btn-secondary" style="padding: 8px 12px;" onclick="generateRandomPNR()" title="Auto Generate PNR">🔄</button>
+                </div>
             </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 25px;">2. Flight Segments (Auto Calendar & Time)</div>
+        <div id="flightsContainer"></div>
+
+        <div class="grid-3" style="margin-top: 15px;">
             <div class="form-group">
-                <label>Departure Time:</label>
-                <input type="text" id="depTime" value="1250">
+                <label>Airline Reservation Footer Note</label>
+                <input type="text" id="inAirlineRef" value="TK TURKISH AIRLINES RESERVATION NUMBER (LAHORE): LHE-TK" oninput="updateTicket()">
             </div>
-            <div class="form-group">
-                <label>Arrival City / Terminal:</label>
-                <input type="text" id="arrCity" value="ISTANBUL AIRPORT">
-            </div>
-            <div class="form-group">
-                <label>Arrival Time:</label>
-                <input type="text" id="arrTime" value="1820">
-            </div>
-            <div class="form-group">
-                <label>Flight Number (e.g., TK 715):</label>
-                <input type="text" id="flightNo" value="TK 715">
-            </div>
-            <div class="form-group">
-                <label>Class & Aircraft:</label>
-                <input type="text" id="flightClass" value="ECONOMY / AIRBUS 330-300">
-            </div>
-            <div class="form-group">
-                <label>Flying Time / Stops:</label>
-                <input type="text" id="flightDuration" value="06HR 30MIN / NON-STOP">
-            </div>
-            <div class="btn-container">
-                <button onclick="generateTicket()">Generate Itinerary</button>
-            </div>
+        </div>
+
+        <div class="action-bar">
+            <button type="button" class="btn btn-secondary" onclick="addFlightSegment()">+ Add Return / Connecting Flight</button>
+            <button type="button" class="btn btn-primary" onclick="updateTicket()">Refresh Preview</button>
+            <button type="button" class="btn btn-success" onclick="window.print()">🖨️ Print / Save Official PDF</button>
         </div>
     </div>
 
-    <!-- Printable Ticket Preview Area -->
-    <div class="ticket-box" id="ticketPreview">
-        <div class="header-title" id="outAgency">ARAB INTERNATIONAL TRAVEL SERVICES</div>
-        <div class="contact-info">
-            OFFICE HOURS | CONTACT: <span id="outContact">0300-0442454</span> | EMAIL ADDRESS: <span id="outEmail">MUNAWARLHR@GMAIL.COM</span>
-        </div>
-        <div class="meta-info">
-            <div>DATE: <span id="outCurDate"></span> &nbsp;&nbsp; TIME: <span id="outCurTime"></span></div>
-            <div><strong>ITINERARY</strong></div>
-        </div>
-        <div class="meta-info">
-            <div>CONSULTANT NAME: <span id="outConsultant">MUNAWAR ASRAR</span></div>
-            <div>BOOKING REF: <span id="outBookingRef">XYZ123</span></div>
-        </div>
-        <div class="passenger-info">
-            ITINERARY PREPARED FOR:<br>
-            <strong><span id="outPassenger">SHAHBAZ/ANAS MR</span></strong>
+    <!-- TICKET PREVIEW SHEET -->
+    <div class="ticket-sheet" id="ticketSheet">
+        <div class="gds-header">
+            <div id="outAgency">ARAB INTERNATIONAL TRAVEL SERVICES</div>
+            <div>OFFICE HOURS CONTACT: <span id="outContact">0300-0442454</span> &nbsp; EMAIL ADDRESS: <span id="outEmail">MUNAWARLHR@GMAIL.COM</span></div>
         </div>
 
-        <table>
+        <div class="gds-meta-row">
+            <div>DATE: <span id="outSysDate">--/--/----</span> &nbsp;&nbsp; TIME: <span id="outSysTime">--:--:--</span></div>
+            <div><strong>ITINERARY</strong></div>
+        </div>
+
+        <div class="gds-meta-row">
+            <div>CONSULTANT NAME: <span id="outConsultant">MUNAWAR ASRAR</span></div>
+            <div>BOOKING REF: <span id="outPnr">8K9L2M</span></div>
+        </div>
+
+        <div class="gds-passenger-block">
+            ITINERARY PREPARED FOR:<br>
+            <strong id="outPassenger">SHAHBAZ/ANAS MR</strong>
+        </div>
+
+        <table class="gds-table">
             <thead>
                 <tr>
-                    <th>DAY</th>
-                    <th>DATE</th>
-                    <th>CITY/TERMINAL/STOPS</th>
-                    <th>TIME</th>
-                    <th>FLIGHT / CLASS</th>
-                    <th>DETAILS</th>
+                    <th style="width: 8%;">DAY</th>
+                    <th style="width: 11%;">DATE</th>
+                    <th style="width: 31%;">CITY/TERMINAL/STOPOVER CITY</th>
+                    <th style="width: 12%;">TIME</th>
+                    <th style="width: 18%;">FLIGHT / CLASS / STATUS</th>
+                    <th style="width: 20%;">STOP/EQP/FLYING TIME SERVICES</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td id="tDay">SUN</td>
-                    <td id="tDate">17 JAN</td>
-                    <td>
-                        <strong>DEP:</strong> <span id="tDepCity">LAHORE</span><br>
-                        <strong>ARR:</strong> <span id="tArrCity">ISTANBUL AIRPORT</span>
-                    </td>
-                    <td>
-                        <strong>DEP:</strong> <span id="tDepTime">1250</span><br>
-                        <strong>ARR:</strong> <span id="tArrTime">1820</span>
-                    </td>
-                    <td>
-                        <span id="tFlightNo">TK 715</span><br>
-                        <span id="tClass">ECONOMY</span>
-                    </td>
-                    <td>
-                        <span id="tDuration">NON-STOP (06HR 30MIN)</span><br>
-                        STATUS: SS<br>
-                        MEALS: YES
-                    </td>
-                </tr>
+            <tbody id="ticketFlightsBody">
+                <!-- Dynamic Flight Rows -->
             </tbody>
         </table>
 
-        <div class="footer-note">
+        <div class="gds-airline-ref" id="outAirlineRef">
+            TK TURKISH AIRLINES RESERVATION NUMBER (LAHORE): LHE-TK
+        </div>
+
+        <div class="gds-footer">
             DATA PROTECTION NOTICE: YOUR PERSONAL DATA WILL BE PROCESSED IN ACCORDANCE WITH THE APPLICABLE CARRIERS’ PRIVACY POLICY AND, IF YOUR BOOKING IS MADE VIA A RESERVATION SYSTEM PROVIDER (GDS), WITH ITS PRIVACY POLICY. THESE ARE AVAILABLE AT HTTP://WWW.IATATRAVELCENTER.COM/PRIVACY OR FROM THE CARRIER OR GDS DIRECTLY. YOU SHOULD READ THIS DOCUMENTATION, WHICH APPLIES TO YOUR BOOKING AND SPECIFIES, FOR EXAMPLE, HOW YOUR PERSONAL DATA IS COLLECTED, STORED, USED, DISCLOSED AND TRANSFERRED.
         </div>
     </div>
-
-    <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
 </div>
 
 <script>
-    // Set current system date and time automatically on load
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    document.getElementById('outCurDate').innerText = `${day}/${month}/${year}`;
-    document.getElementById('outCurTime').innerText = now.toTimeString().split(' ')[0];
+    const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-    function generateTicket() {
-        document.getElementById('outAgency').innerText = document.getElementById('agencyName').value;
-        document.getElementById('outContact').innerText = document.getElementById('agencyContact').value;
-        document.getElementById('outEmail').innerText = document.getElementById('agencyEmail').value;
-        document.getElementById('outConsultant').innerText = document.getElementById('consultantName').value;
-        document.getElementById('outPassenger').innerText = document.getElementById('passengerName').value;
-        document.getElementById('outBookingRef').innerText = document.getElementById('bookingRef').value;
-        
-        let flightDateParts = document.getElementById('flightDate').value.split('/');
-        document.getElementById('tDay').innerText = flightDateParts[0] ? flightDateParts[0].trim() : 'SUN';
-        document.getElementById('tDate').innerText = flightDateParts[1] ? flightDateParts[1].trim() : '17 JAN';
+    // 1. Real-Time Live Clock Function
+    function updateLiveClock() {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        const timeStr = now.toTimeString().split(' ')[0];
 
-        document.getElementById('tDepCity').innerText = document.getElementById('depCity').value;
-        document.getElementById('tDepTime').innerText = document.getElementById('depTime').value;
-        document.getElementById('tArrCity').innerText = document.getElementById('arrCity').value;
-        document.getElementById('tArrTime').innerText = document.getElementById('arrTime').value;
-        document.getElementById('tFlightNo').innerText = document.getElementById('flightNo').value;
-        document.getElementById('tClass').innerText = document.getElementById('flightClass').value;
-        document.getElementById('tDuration').innerText = document.getElementById('flightDuration').value;
-        
-        window.scrollTo({ top: document.getElementById('ticketPreview').offsetTop - 20, behavior: 'smooth' });
+        const formattedDate = `${dd}/${mm}/${yyyy}`;
+        document.getElementById('outSysDate').innerText = formattedDate;
+        document.getElementById('outSysTime').innerText = timeStr;
+        document.getElementById('liveClockBadge').innerText = `LIVE: ${formattedDate} | ${timeStr}`;
     }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    // 2. Random 6-Char PNR Generator
+    function generateRandomPNR() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let pnr = '';
+        for (let i = 0; i < 6; i++) {
+            pnr += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('inPnr').value = pnr;
+        updateTicket();
+    }
+
+    // 3. Flight Segment Management
+    let segmentCount = 0;
+
+    function addFlightSegment(defaults = null) {
+        segmentCount++;
+        const id = segmentCount;
+        const container = document.getElementById('flightsContainer');
+
+        const data = defaults || {
+            date: '2027-01-17',
+            depCity: 'LAHORE',
+            arrCity: 'ISTANBUL AIRPORT',
+            depTime: '12:50',
+            arrTime: '18:20',
+            flightNo: 'TK 715',
+            cabin: 'ECONOMY',
+            status: 'SS',
+            stops: 'NON-STOP',
+            aircraft: 'AIRBUS 330-300',
+            duration: '06HR 30MIN',
+            services: 'MEALS'
+        };
+
+        const card = document.createElement('div');
+        card.className = 'flight-card';
+        card.id = `segment-${id}`;
+        card.innerHTML = `
+            <div class="flight-card-header">
+                <span>FLIGHT SEGMENT #${id}</span>
+                ${id > 1 ? `<button type="button" class="btn-remove" onclick="removeSegment(${id})">Remove</button>` : ''}
+            </div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label>Flight Date (Calendar)</label>
+                    <input type="date" class="f-date" value="${data.date}" onchange="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Departure City / Terminal</label>
+                    <input type="text" class="f-depCity" value="${data.depCity}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Arrival City / Terminal</label>
+                    <input type="text" class="f-arrCity" value="${data.arrCity}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Departure Time</label>
+                    <input type="time" class="f-depTime" value="${data.depTime}" onchange="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Arrival Time</label>
+                    <input type="time" class="f-arrTime" value="${data.arrTime}" onchange="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Flight Number</label>
+                    <input type="text" class="f-flightNo" value="${data.flightNo}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Cabin Class</label>
+                    <select class="f-cabin" onchange="updateTicket()">
+                        <option value="ECONOMY" ${data.cabin === 'ECONOMY' ? 'selected' : ''}>ECONOMY</option>
+                        <option value="BUSINESS" ${data.cabin === 'BUSINESS' ? 'selected' : ''}>BUSINESS</option>
+                        <option value="FIRST CLASS" ${data.cabin === 'FIRST CLASS' ? 'selected' : ''}>FIRST CLASS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status Code</label>
+                    <select class="f-status" onchange="updateTicket()">
+                        <option value="SS" ${data.status === 'SS' ? 'selected' : ''}>SS (Confirmed/Hold)</option>
+                        <option value="HK" ${data.status === 'HK' ? 'selected' : ''}>HK (Holding Confirmed)</option>
+                        <option value="OK" ${data.status === 'OK' ? 'selected' : ''}>OK (Ticketed)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Stops</label>
+                    <input type="text" class="f-stops" value="${data.stops}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Aircraft / Equipment</label>
+                    <input type="text" class="f-aircraft" value="${data.aircraft}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Flying Duration</label>
+                    <input type="text" class="f-duration" value="${data.duration}" oninput="updateTicket()">
+                </div>
+                <div class="form-group">
+                    <label>Services (e.g. MEALS)</label>
+                    <input type="text" class="f-services" value="${data.services}" oninput="updateTicket()">
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+        updateTicket();
+    }
+
+    function removeSegment(id) {
+        const el = document.getElementById(`segment-${id}`);
+        if (el) el.remove();
+        updateTicket();
+    }
+
+    // Helper: Format YYYY-MM-DD to { day: "SUN", date: "17 JAN" }
+    function parseCalendarDate(dateStr) {
+        if (!dateStr) return { day: "---", date: "-- ---" };
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const dateObj = new Date(y, m - 1, d);
+        return {
+            day: DAYS[dateObj.getDay()],
+            date: `${String(d).padStart(2, '0')} ${MONTHS[m - 1]}`
+        };
+    }
+
+    // Helper: Format HH:MM to GDS 4-digit HHMM
+    function formatGdsTime(timeStr) {
+        if (!timeStr) return "----";
+        return timeStr.replace(':', '');
+    }
+
+    // 4. Render Live Ticket Preview
+    function updateTicket() {
+        document.getElementById('outAgency').innerText = document.getElementById('inAgency').value.toUpperCase();
+        document.getElementById('outContact').innerText = document.getElementById('inContact').value.toUpperCase();
+        document.getElementById('outEmail').innerText = document.getElementById('inEmail').value.toUpperCase();
+        document.getElementById('outConsultant').innerText = document.getElementById('inConsultant').value.toUpperCase();
+        document.getElementById('outPassenger').innerText = document.getElementById('inPassenger').value.toUpperCase();
+        document.getElementById('outPnr').innerText = document.getElementById('inPnr').value.toUpperCase();
+        document.getElementById('outAirlineRef').innerText = document.getElementById('inAirlineRef').value.toUpperCase();
+
+        const tbody = document.getElementById('ticketFlightsBody');
+        tbody.innerHTML = '';
+
+        const cards = document.querySelectorAll('.flight-card');
+        cards.forEach(card => {
+            const rawDate = card.querySelector('.f-date').value;
+            const parsedDate = parseCalendarDate(rawDate);
+
+            const depCity = card.querySelector('.f-depCity').value.toUpperCase();
+            const arrCity = card.querySelector('.f-arrCity').value.toUpperCase();
+            const depTime = formatGdsTime(card.querySelector('.f-depTime').value);
+            const arrTime = formatGdsTime(card.querySelector('.f-arrTime').value);
+            const flightNo = card.querySelector('.f-flightNo').value.toUpperCase();
+            const cabin = card.querySelector('.f-cabin').value.toUpperCase();
+            const status = card.querySelector('.f-status').value.toUpperCase();
+            const stops = card.querySelector('.f-stops').value.toUpperCase();
+            const aircraft = card.querySelector('.f-aircraft').value.toUpperCase();
+            const duration = card.querySelector('.f-duration').value.toUpperCase();
+            const services = card.querySelector('.f-services').value.toUpperCase();
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${parsedDate.day}</td>
+                <td>${parsedDate.date}</td>
+                <td>
+                    <strong>DEP</strong> &nbsp; ${depCity}<br>
+                    <strong>ARR</strong> &nbsp; ${arrCity}
+                </td>
+                <td>
+                    ${depTime}<br>
+                    ${arrTime}
+                </td>
+                <td>
+                    <strong>${flightNo}</strong><br>
+                    ${cabin}<br>
+                    ${status}
+                </td>
+                <td>
+                    ${stops}<br>
+                    ${aircraft}<br>
+                    ${duration}<br>
+                    ${services}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Initialize with first default segment
+    addFlightSegment();
 </script>
 
 </body>
