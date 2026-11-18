@@ -116,8 +116,13 @@
         .passenger-box {
             margin-bottom: 16px;
         }
+        /* Thin underline matching Word style */
         .underline-title {
-            text-decoration: underline;
+            display: inline-block;
+            text-decoration: none;
+            border-bottom: 0.6px solid #000000;
+            padding-bottom: 0.5px;
+            line-height: 1.1;
         }
 
         .word-table {
@@ -150,14 +155,18 @@
             padding-left: 25%;
         }
 
+        /* Dim/soft color for bottom 4 lines + thin underline on link */
         .footer-text {
             font-size: 6.3pt;
+            color: #444444;
             text-align: justify;
             line-height: 1.25;
         }
         .footer-text a {
-            color: #0000ee;
-            text-decoration: underline;
+            color: #1a45b8;
+            text-decoration: none;
+            border-bottom: 0.6px solid #1a45b8;
+            padding-bottom: 0.5px;
         }
 
         @page {
@@ -238,13 +247,11 @@
 
     <!-- EXACT TICKET SHEET -->
     <div class="word-page">
-        <!-- EXACT MATCH SABRE LOGO: CUT STARTS AT CENTER OF BOTTOM CURVE OF 'S' AND LIGHTLY TOUCHES 'r' -->
         <div class="sabre-logo-wrap">
             <svg width="115" height="30" viewBox="0 0 215 62" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <mask id="sabre-slash-mask">
                         <rect width="215" height="62" fill="white" />
-                        <!-- Starts at center of S's bottom curve (x=14, y=41) and tapers to lightly touch 'r' (x=135, y=22) -->
                         <path d="M 14 41 Q 72 28 135 22 L 135 24 Q 72 32 14 45 Z" fill="black" />
                     </mask>
                 </defs>
