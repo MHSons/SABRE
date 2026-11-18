@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabre GDS Itinerary - Exact Format</title>
+    <title>Sabre GDS Itinerary - Perfect Match</title>
     <style>
         * {
             box-sizing: border-box;
@@ -154,7 +154,7 @@
         }
         .word-table th {
             text-align: left;
-            vertical-align: bottom; /* Is se saare headers neeche se ek level par rahenge */
+            vertical-align: bottom;
             font-weight: normal;
             padding: 0 3px 1px 0;
         }
@@ -208,11 +208,15 @@
     <!-- CONTROL PANEL -->
     <div class="control-panel">
         <div class="control-header">
-            <h3>✈️ Sabre Itinerary Generator (Exact Logo & Format)</h3>
+            <h3>✈️ Sabre Itinerary Generator (Auto 2 Months & Unique Timing)</h3>
             <span class="live-status" id="liveBadge">AUTO CLOCK ACTIVE</span>
         </div>
 
         <div class="form-grid">
+            <div class="form-group">
+                <label>Ticket Generation Date</label>
+                <input type="date" id="inGenDate" onchange="renderTicket()">
+            </div>
             <div class="form-group">
                 <label>Agency Name</label>
                 <input type="text" id="inAgency" value="ARAB INTERNATIONAL TRAVEL SERVICES" oninput="renderTicket()">
@@ -230,9 +234,9 @@
                 <input type="text" id="inConsultant" value="MUNAWAR ASRAR" oninput="renderTicket()">
             </div>
             <div class="form-group">
-                <label>Booking Ref (Optional / Auto)</label>
+                <label>Booking Ref (PNR)</label>
                 <div style="display:flex; gap:4px;">
-                    <input type="text" id="inRef" value="" placeholder="Blank or Auto" style="width:100%;" oninput="renderTicket()">
+                    <input type="text" id="inRef" value="" placeholder="Auto PNR" style="width:100%;" oninput="renderTicket()">
                     <button type="button" class="btn btn-add" style="padding:4px 6px;" onclick="autoPNR()">Auto</button>
                 </div>
             </div>
@@ -259,19 +263,20 @@
 
     <!-- WORD DOCUMENT PREVIEW SHEET -->
     <div class="word-page">
-        <!-- EXACT SABRE LOGO WITH WHITE CURVED SLASH & ® -->
+        <!-- EXACT SABRE LOGO (Sabre with lowercase abre & ®) -->
         <div class="sabre-logo-wrap">
-            <svg width="92" height="24" viewBox="0 0 230 60" xmlns="http://www.w3.org/2000/svg">
+            <svg width="105" height="26" viewBox="0 0 250 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <mask id="sabre-slash-mask">
-                        <rect width="230" height="60" fill="white" />
-                        <path d="M -5 50 Q 105 26 225 14 L 225 19 Q 105 32 -5 55 Z" fill="black" />
+                        <rect width="250" height="60" fill="white" />
+                        <path d="M -5 50 Q 115 26 245 14 L 245 19 Q 115 32 -5 55 Z" fill="black" />
                     </mask>
                 </defs>
                 <g mask="url(#sabre-slash-mask)">
-                    <text x="2" y="47" font-family="'Arial Black', 'Helvetica Neue', Impact, sans-serif" font-style="italic" font-weight="900" font-size="54" fill="#e1000f" letter-spacing="-2.5">Sabre</text>
+                    <!-- Capital S, lowercase abre -->
+                    <text x="2" y="47" font-family="'Arial Black', 'Helvetica Neue', Impact, sans-serif" font-style="italic" font-weight="900" font-size="52" fill="#e1000f" letter-spacing="-2">Sabre</text>
                 </g>
-                <text x="206" y="48" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#e1000f">®</text>
+                <text x="220" y="48" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#e1000f">®</text>
             </svg>
         </div>
 
@@ -338,19 +343,18 @@
     const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+    // Set default generation date to today
+    const todayObj = new Date();
+    document.getElementById('inGenDate').valueAsDate = todayObj;
+
     function startLiveClock() {
         const update = () => {
             const now = new Date();
-            const dd = String(now.getDate()).padStart(2, '0');
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const yyyy = now.getFullYear();
             const hh = String(now.getHours()).padStart(2, '0');
             const min = String(now.getMinutes()).padStart(2, '0');
             const ss = String(now.getSeconds()).padStart(2, '0');
-
-            document.getElementById('outDate').innerText = `${dd}/${mm}/${yyyy}`;
             document.getElementById('outTime').innerText = `${hh}:${min}:${ss}`;
-            document.getElementById('liveBadge').innerText = `LIVE: ${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+            document.getElementById('liveBadge').innerText = `LIVE TIME: ${hh}:${min}:${ss}`;
         };
         update();
         setInterval(update, 1000);
@@ -369,50 +373,44 @@
         segId++;
         const id = segId;
         const wrap = document.getElementById('segmentsWrapper');
+        
+        // Auto vary flight numbers and times for subsequent segments
+        let defaultFlt = id === 1 ? "TK 715" : (id === 2 ? "TK 716" : `TK ${715 + id}`);
+        let defaultDep = id === 1 ? "12:50" : (id === 2 ? "15:30" : "09:15");
+        let defaultArr = id === 1 ? "18:20" : (id === 2 ? "21:00" : "14:45");
+
         const div = document.createElement('div');
         div.className = 'segment-box';
         div.id = `seg-${id}`;
         div.innerHTML = `
             <div class="segment-title">
-                <span>FLIGHT SEGMENT #${id} (Auto Calendar & Time)</span>
+                <span>FLIGHT SEGMENT #${id} (Auto +2 Months Date & Unique Time)</span>
                 ${id > 1 ? `<button type="button" class="btn-del" onclick="removeFlight(${id})">Remove</button>` : ''}
             </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Flight Date (Calendar)</label>
-                    <input type="date" class="f-date" value="2027-01-17" onchange="renderTicket()">
-                </div>
-                <div class="form-group">
                     <label>DEP City</label>
-                    <input type="text" class="f-dep" value="LAHORE" oninput="renderTicket()">
+                    <input type="text" class="f-dep" value="${id === 1 ? 'LAHORE' : 'ISTANBUL AIRPORT'}" oninput="renderTicket()">
                 </div>
                 <div class="form-group">
                     <label>ARR City</label>
-                    <input type="text" class="f-arr" value="ISTANBUL AIRPORT" oninput="renderTicket()">
+                    <input type="text" class="f-arr" value="${id === 1 ? 'ISTANBUL AIRPORT' : 'LAHORE'}" oninput="renderTicket()">
                 </div>
                 <div class="form-group">
                     <label>DEP Time</label>
-                    <input type="time" class="f-deptime" value="12:50" onchange="renderTicket()">
+                    <input type="time" class="f-deptime" value="${defaultDep}" onchange="renderTicket()">
                 </div>
                 <div class="form-group">
                     <label>ARR Time</label>
-                    <input type="time" class="f-arrtime" value="18:20" onchange="renderTicket()">
+                    <input type="time" class="f-arrtime" value="${defaultArr}" onchange="renderTicket()">
                 </div>
                 <div class="form-group">
                     <label>Flight No</label>
-                    <input type="text" class="f-flt" value="TK 715" oninput="renderTicket()">
+                    <input type="text" class="f-flt" value="${defaultFlt}" oninput="renderTicket()">
                 </div>
                 <div class="form-group">
-                    <label>Class</label>
-                    <input type="text" class="f-cls" value="ECONOMY" oninput="renderTicket()">
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <input type="text" class="f-sts" value="SS" oninput="renderTicket()">
-                </div>
-                <div class="form-group">
-                    <label>Stops</label>
-                    <input type="text" class="f-stop" value="NON-STOP" oninput="renderTicket()">
+                    <label>Class / Status</label>
+                    <input type="text" class="f-cls" value="ECONOMY / SS" oninput="renderTicket()">
                 </div>
                 <div class="form-group">
                     <label>Aircraft (EQP)</label>
@@ -437,17 +435,20 @@
         renderTicket();
     }
 
-    function parseCalendar(val) {
-        if (!val) return { day: "SUN", date: "17 JAN" };
-        const [y, m, d] = val.split('-').map(Number);
-        const dt = new Date(y, m - 1, d);
-        return {
-            day: DAYS[dt.getDay()],
-            date: `${String(d).padStart(2, '0')} ${MONTHS[m - 1]}`
-        };
-    }
-
     function renderTicket() {
+        // 1. Ticket Generation Date formatting
+        const genDateVal = document.getElementById('inGenDate').value;
+        if (genDateVal) {
+            const [gy, gm, gd] = genDateVal.split('-');
+            document.getElementById('outDate').innerText = `${gd}/${gm}/${gy}`;
+            
+            // 2. Calculate Flight Date = Generation Date + 2 Months
+            const baseDate = new Date(genDateVal);
+            baseDate.setMonth(baseDate.getMonth() + 2); // Exactly 2 months ahead
+            
+            window.calculatedFlightDateObj = baseDate;
+        }
+
         document.getElementById('outAgency').innerText = document.getElementById('inAgency').value;
         document.getElementById('outContact').innerText = document.getElementById('inContact').value;
         document.getElementById('outEmail').innerText = document.getElementById('inEmail').value;
@@ -459,16 +460,30 @@
         const tbody = document.getElementById('outFlightsBody');
         tbody.innerHTML = '';
 
+        let segmentIndex = 0;
         document.querySelectorAll('.segment-box').forEach(box => {
-            const cal = parseCalendar(box.querySelector('.f-date').value);
+            segmentIndex++;
+            
+            // For return/subsequent flights, add extra days if needed, else base + 2 months
+            let flightDate = new Date(window.calculatedFlightDateObj || new Date());
+            if (segmentIndex > 1) {
+                flightDate.setDate(flightDate.getDate() + ((segmentIndex - 1) * 7)); // +7 days for return trip
+            }
+
+            const dayName = DAYS[flightDate.getDay()];
+            const dateNum = String(flightDate.getDate()).padStart(2, '0');
+            const monthStr = MONTHS[flightDate.getMonth()];
+            const formattedFlightDate = `${dateNum} ${monthStr}`;
+
             const dep = box.querySelector('.f-dep').value;
             const arr = box.querySelector('.f-arr').value;
             const depTime = box.querySelector('.f-deptime').value.replace(':', '');
             const arrTime = box.querySelector('.f-arrtime').value.replace(':', '');
             const flt = box.querySelector('.f-flt').value;
-            const cls = box.querySelector('.f-cls').value;
-            const sts = box.querySelector('.f-sts').value;
-            const stop = box.querySelector('.f-stop').value;
+            const clsParts = box.querySelector('.f-cls').value.split('/');
+            const cls = clsParts[0] ? clsParts[0].trim() : 'ECONOMY';
+            const sts = clsParts[1] ? clsParts[1].trim() : 'SS';
+            
             const eqp = box.querySelector('.f-eqp').value;
             const dur = box.querySelector('.f-dur').value;
             const srv = box.querySelector('.f-srv').value;
@@ -476,13 +491,13 @@
             const tr = document.createElement('tr');
             tr.className = 'flight-data';
             tr.innerHTML = `
-                <td>${cal.day}</td>
-                <td>${cal.date}</td>
+                <td>${dayName}</td>
+                <td>${formattedFlightDate}</td>
                 <td>DEP<br><br>ARR</td>
                 <td>${dep}<br><br>${arr}</td>
                 <td>${depTime}<br><br>${arrTime}</td>
                 <td>${flt}<br>${cls}<br>${sts}</td>
-                <td>${stop}<br>${eqp}<br>${dur}<br>${srv}</td>
+                <td>NON-STOP<br>${eqp}<br>${dur}<br>${srv}</td>
             `;
             tbody.appendChild(tr);
         });
