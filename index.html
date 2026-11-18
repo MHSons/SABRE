@@ -117,11 +117,12 @@
             margin-bottom: 16px;
         }
         
-        /* Original Word style underline without extra gap and ultra-thin 0.3px thickness */
+        /* Ultra-thin 0.3px underline with zero extra spacing */
         .underline-title {
             text-decoration: underline;
             text-decoration-thickness: 0.3px;
             text-underline-offset: 1px;
+            display: inline;
         }
 
         .word-table {
@@ -276,8 +277,8 @@
         </div>
 
         <div class="passenger-box">
-            <div class="underline-title">ITINERARY PREPARED FOR:</div>
-            <div id="outPassenger" style="margin-top: 4px;">SHAHBAZ/ANAS MR</div>
+            <span class="underline-title">ITINERARY PREPARED FOR:</span>
+            <div id="outPassenger" style="margin-top: 2px;">SHAHBAZ/ANAS MR</div>
         </div>
 
         <table class="word-table">
