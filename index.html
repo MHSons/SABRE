@@ -118,8 +118,10 @@
             text-transform: uppercase;
         }
 
-        .sabre-logo-wrap {
+        /* Fix: Prevent uppercase on Sabre logo so 'abre' stays lowercase */
+        .sabre-logo-wrap, .sabre-logo-wrap * {
             margin-bottom: 14px;
+            text-transform: none !important;
         }
 
         /* Two-Column Header Layout */
@@ -263,20 +265,19 @@
 
     <!-- WORD DOCUMENT PREVIEW SHEET -->
     <div class="word-page">
-        <!-- EXACT SABRE LOGO (Sabre with lowercase abre & ®) -->
+        <!-- EXACT SABRE LOGO (Capital S, lowercase abre & ®) -->
         <div class="sabre-logo-wrap">
-            <svg width="105" height="26" viewBox="0 0 250 60" xmlns="http://www.w3.org/2000/svg">
+            <svg width="98" height="25" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <mask id="sabre-slash-mask">
-                        <rect width="250" height="60" fill="white" />
-                        <path d="M -5 50 Q 115 26 245 14 L 245 19 Q 115 32 -5 55 Z" fill="black" />
+                        <rect width="220" height="60" fill="white" />
+                        <path d="M -5 50 Q 95 26 205 14 L 205 19 Q 95 32 -5 55 Z" fill="black" />
                     </mask>
                 </defs>
                 <g mask="url(#sabre-slash-mask)">
-                    <!-- Capital S, lowercase abre -->
                     <text x="2" y="47" font-family="'Arial Black', 'Helvetica Neue', Impact, sans-serif" font-style="italic" font-weight="900" font-size="52" fill="#e1000f" letter-spacing="-2">Sabre</text>
                 </g>
-                <text x="220" y="48" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#e1000f">®</text>
+                <text x="180" y="48" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#e1000f">®</text>
             </svg>
         </div>
 
@@ -343,7 +344,6 @@
     const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-    // Set default generation date to today
     const todayObj = new Date();
     document.getElementById('inGenDate').valueAsDate = todayObj;
 
@@ -374,7 +374,6 @@
         const id = segId;
         const wrap = document.getElementById('segmentsWrapper');
         
-        // Auto vary flight numbers and times for subsequent segments
         let defaultFlt = id === 1 ? "TK 715" : (id === 2 ? "TK 716" : `TK ${715 + id}`);
         let defaultDep = id === 1 ? "12:50" : (id === 2 ? "15:30" : "09:15");
         let defaultArr = id === 1 ? "18:20" : (id === 2 ? "21:00" : "14:45");
@@ -436,15 +435,13 @@
     }
 
     function renderTicket() {
-        // 1. Ticket Generation Date formatting
         const genDateVal = document.getElementById('inGenDate').value;
         if (genDateVal) {
             const [gy, gm, gd] = genDateVal.split('-');
             document.getElementById('outDate').innerText = `${gd}/${gm}/${gy}`;
             
-            // 2. Calculate Flight Date = Generation Date + 2 Months
             const baseDate = new Date(genDateVal);
-            baseDate.setMonth(baseDate.getMonth() + 2); // Exactly 2 months ahead
+            baseDate.setMonth(baseDate.getMonth() + 2);
             
             window.calculatedFlightDateObj = baseDate;
         }
@@ -464,10 +461,9 @@
         document.querySelectorAll('.segment-box').forEach(box => {
             segmentIndex++;
             
-            // For return/subsequent flights, add extra days if needed, else base + 2 months
             let flightDate = new Date(window.calculatedFlightDateObj || new Date());
             if (segmentIndex > 1) {
-                flightDate.setDate(flightDate.getDate() + ((segmentIndex - 1) * 7)); // +7 days for return trip
+                flightDate.setDate(flightDate.getDate() + ((segmentIndex - 1) * 7));
             }
 
             const dayName = DAYS[flightDate.getDay()];
